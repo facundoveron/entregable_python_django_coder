@@ -15,7 +15,7 @@ Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone URL_DEL_REPOSITORIO
+git clone https://github.com/facundoveron/entregable_python_django_coder.git
 ```
 
 ### 2. Entrar a la carpeta del proyecto
