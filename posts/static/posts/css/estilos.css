@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Variables y Paleta de Colores
+   ========================================================================== */
+:root {
+    --color-primario: #2c3e50;
+    --color-secundario: #3498db;
+    --color-acento: #2980b9;
+    --color-fondo: #f8fafc;
+    --color-fondo-card: #ffffff;
+    --color-texto: #334155;
+    --color-texto-suave: #64748b;
+    --color-borde: #e2e8f0;
+    --fuente-principal: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --radio-borde: 8px;
+    --ancho-maximo: 900px;
+}
+
+/* ==========================================================================
+   Reseteo y Estilos Generales
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   Encabezado y Navegación
+   ========================================================================== */
+header {
+    background-color: var(--color-primario);
+    color: #ffffff;
+    padding: 1.5rem 1rem;
+    box-shadow: var(--sombra-suave);
+}
+
+header h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.5px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover {
+    background-color: var(--color-secundario);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Contenido Principal
+   ========================================================================== */
+main {
+    flex: 1;
+    max-width: var(--ancho-maximo);
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* ==========================================================================
+   Títulos y Tipografía
+   ========================================================================== */
+h2 {
+    color: var(--color-primario);
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-borde);
+}
+
+h3 {
+    color: var(--color-secundario);
+    font-size: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--color-texto);
+    font-size: 1.05rem;
+}
+
+/* ==========================================================================
+   Secciones y Tarjetas
+   ========================================================================== */
+section {
+    background-color: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--sombra-suave);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+section:hover {
+    box-shadow: var(--sombra-hover);
+}
+
+section h3:first-child {
+    margin-top: 0;
+}
+
+/* ==========================================================================
+   Pie de Página
+   ========================================================================== */
+footer {
+    background-color: var(--color-primario);
+    color: #94a3b8;
+    text-align: center;
+    padding: 1.25rem 1rem;
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+footer p {
+    margin: 0;
+    color: #cbd5e1;
+}
