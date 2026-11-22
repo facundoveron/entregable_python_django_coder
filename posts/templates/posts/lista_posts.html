@@ -1,14 +1,29 @@
 {% extends "posts/base.html" %}
 
 {% block content %}
+
+<a href="{% url 'posts:crear_post' %}">Crear un nuevo post</a>
+
 <h1>Últimos posts mas relevante</h1>
 
 {% for post in posts %}
 <article>
-    <h2>{{ post.titulo }}</h2>
+
+    {% if post.imagen %}
+    <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" width="250" />
+    {% endif %}
+
+    <h2>
+        <a href="{% url 'posts:detalle_post' post.slug %}">
+            {{ post.titulo }}
+        </a>
+    </h2>
+
+    <p>{{ post.contenido|truncatewords:30 }}</p>
     <p>Escrito por {{ post.autor }}</p>
+    <p>Estado: {{ post.estado }}</p>
     <p>Publicado el {{ post.fecha_creacion }}</p>
-    <p>{{ post.contenido }}</p>
+
 </article>
 {% empty %}
 <p>Todavía no hay posts publicados.</p>

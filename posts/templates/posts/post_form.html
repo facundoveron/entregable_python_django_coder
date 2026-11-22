@@ -1,0 +1,43 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+
+{% if post and post.imagen %}
+<p>Imagen actual:</p>
+<img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" width="300" />
+{% endif %}
+
+<h1>{{ titulo_pagina }}</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        {{ form.titulo.label_tag }}
+        {{ form.titulo }}
+        {{ form.titulo.errors }}
+    </div>
+    <div>
+        {{ form.contenido.label_tag }}
+        {{ form.contenido }}
+        {{ form.contenido.errors }}
+    </div>
+    <div>
+        {{ form.estado.label_tag }}
+        {{ form.estado }}
+        {{ form.estado.errors }}
+    </div>
+    <div>
+        {{ form.autor.label_tag }}
+        {{ form.autor }}
+        {{ form.autor.errors }}
+    </div>
+    <button type="submit">{{ texto_boton }}</button>
+</form>
+
+{% if post %}
+<a href="{% url 'posts:detalle_post' post.slug %}">Cancelar edición</a>
+{% else %}
+<a href="{% url 'posts:lista_posts' %}">Cancelar creación</a>
+{% endif %}
+
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -14,6 +15,14 @@ class Post(models.Model):
     autor = models.CharField(max_length=200)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default="borrador")
+    imagen = models.ImageField(upload_to="posts/", null=True, blank=True)
+    slug = models.SlugField(max_length=220, unique=True, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.titulo)
+            
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["-fecha_creacion"]

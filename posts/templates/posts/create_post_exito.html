@@ -1,0 +1,6 @@
+{% extends 'posts/base.html' %}
+
+<h1>Post creado exitosamente!</h1>
+<p>Titulo: {{ titulo }}</p>
+<p>Contenido: {{ contenido }}</p>
+<a href="{% url 'posts:lista_posts' %}">Volver al listado</a>
