@@ -5,9 +5,26 @@
 {% block content %}
 <h2>Bienvenido a Mi Blog</h2>
 
+<nav>
+    <a href="{% url 'posts:lista_posts' %}">Inicio</a>
+    {% if user.is_authenticated %}
+    <span>Hola, {{ user.username }}</span>
+    <a href="{% url 'posts:crear_post' %}">Crear post</a>
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit">Cerrar sesión</button>
+    </form>
+    {% else %}
+    <a href="{% url 'login' %}">Iniciar sesión</a>
+    <a href="{% url 'registro' %}">Crear cuenta</a>
+    {% endif %}
+</nav>
+
 <section>
     <p>
-        ¡Te damos la bienvenida a este espacio digital! Aquí encontrarás artículos, tutoriales y reflexiones sobre desarrollo web, programación en Python y Django, y tecnología en general. Te invitamos a explorar nuestras secciones y disfrutar del contenido.
+        ¡Te damos la bienvenida a este espacio digital! Aquí encontrarás artículos, tutoriales y reflexiones sobre
+        desarrollo web, programación en Python y Django, y tecnología en general. Te invitamos a explorar nuestras
+        secciones y disfrutar del contenido.
     </p>
 </section>
 {% endblock %}

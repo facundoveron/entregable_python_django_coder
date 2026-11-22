@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # Aplicaciones propias
     'posts.apps.PostsConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,14 @@ MAILERS = {
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'posts:lista_posts'
+LOGOUT_REDIRECT_URL = 'posts:lista_posts'

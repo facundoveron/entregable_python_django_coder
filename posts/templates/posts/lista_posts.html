@@ -2,7 +2,9 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
 <a href="{% url 'posts:crear_post' %}">Crear un nuevo post</a>
+{% endif %}
 
 <h1>Últimos posts mas relevante</h1>
 

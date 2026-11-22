@@ -3,8 +3,9 @@ from .models import Post
 from .forms import PostForm
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponseForbidden
 
-# Create your views here.
 def inicio(request):
     return render(request,'posts/inicio.html')
 
@@ -18,8 +19,6 @@ def lista_posts(request):
         "posts": posts
     })
 
-
-#Ver el detalle de un post.
 def detalle_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
 
@@ -30,13 +29,14 @@ def detalle_post(request, slug):
     })
 
 
-#Crear un nuevo post.
-
+@permission_required("posts.add_post")
 def crear_post(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
+            post = form.save(commit=False)
+            post.autor = request.user
             form.save()
             return redirect("posts:lista_posts")
         else:
@@ -56,9 +56,12 @@ def crear_post(request):
         "texto_boton": "Guardar"
     })
 
-#Editar un post existente.
+@login_required
 def editar_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
+
+    if post.autor != request.user:
+        return HttpResponseForbidden("No tienes permiso para editar este post.")
 
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES, instance=post)
@@ -79,9 +82,12 @@ def editar_post(request, slug):
 
     return render(request, "posts/post_form.html", context)
 
-#Borrar un post.
+@login_required
 def eliminar_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
+
+    if post.autor != request.user:
+        return HttpResponseForbidden("No tienes permiso para editar este post.")
 
     if request.method == "POST":
         post.delete()
