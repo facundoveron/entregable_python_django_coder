@@ -6,6 +6,15 @@
 <a href="{% url 'posts:crear_post' %}">Crear un nuevo post</a>
 {% endif %}
 
+<form method="get">
+    <input type="text" name="q" placeholder="Buscar posts..." value="{{ busqueda }}" />
+    <button type="submit">Buscar</button>
+</form>
+
+{% if busqueda %}
+<a href="{% url 'posts:lista_posts' %}">Limpiar búsqueda</a>
+{% endif %}
+
 <h1>Últimos posts mas relevante</h1>
 
 {% for post in posts %}
@@ -28,6 +37,10 @@
 
 </article>
 {% empty %}
-<p>Todavía no hay posts publicados.</p>
+{% if busqueda %}
+<p>No se encontraron publicaciones para esa búsqueda.</p>
+{% else %}
+<p>Todavía no hay publicaciones cargadas.</p>
+{% endif %}
 {% endfor %}
 {% endblock %}

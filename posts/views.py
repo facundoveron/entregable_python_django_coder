@@ -5,6 +5,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseForbidden
+from django.db.models import Q
 
 def inicio(request):
     return render(request,'posts/inicio.html')
@@ -13,10 +14,16 @@ def acerca_de(request):
     return render(request,'posts/acerca.html')
 
 def lista_posts(request):
-    posts = Post.objects.all().order_by("-fecha_creacion")
-
-    return render(request, "posts/lista_posts.html", {
-        "posts": posts
+    busqueda = request.GET.get('q')
+    posts = Post.objects.filter(estado='publicado').order_by('-fecha_creacion')
+    if busqueda:
+        posts = posts.filter(
+            Q(titulo__icontains=busqueda) |
+            Q(contenido__icontains=busqueda)
+        )
+    return render(request, 'posts/lista_posts.html', {
+        'posts': posts,
+        'busqueda': busqueda,
     })
 
 def detalle_post(request, slug):
