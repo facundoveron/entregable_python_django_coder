@@ -1,41 +1,38 @@
 from django import forms
 from .models import Post
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["titulo", "contenido", "imagen", "autor", "estado"]
+        fields = ["titulo", "resumen", "contenido", "imagen", "estado"]
 
         labels = {
-            "titulo": "Titulo del post",
+            "titulo": "Título del post",
+            "resumen": "Resumen breve",
             "contenido": "Contenido del post",
-            "imagen": "Imagen del post",
-            "autor": "Autor del post",
-            "estado": "Estado del post"
+            "imagen": "Imagen de portada",
+            "estado": "Estado",
         }
 
         widgets = {
             "titulo": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Escribe el título del post",
-                "required": "required"
+            }),
+            "resumen": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Un breve resumen del artículo (opcional)",
             }),
             "contenido": forms.Textarea(attrs={
                 "class": "form-control",
-                "rows": 6,
-                "placeholder": "Escribe el contenido del post",
-                "required": "required"
+                "rows": 10,
+                "placeholder": "Escribe el contenido del post...",
             }),
             "imagen": forms.FileInput(attrs={
-                "class": "form-control"
-            }),
-            "autor": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "Escribe el autor del post",
-                "required": "required"
             }),
             "estado": forms.Select(attrs={
-                "class": "form-control",
-                "required": "required"
+                "class": "form-select",
             }),
         }

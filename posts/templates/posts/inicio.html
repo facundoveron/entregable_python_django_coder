@@ -1,30 +1,67 @@
 {% extends "posts/base.html" %}
+{% load static %}
 
 {% block title %}Inicio | Mi Blog{% endblock %}
 
 {% block content %}
-<h2>Bienvenido a Mi Blog</h2>
+<!-- Hero -->
+<div class="hero-section text-center">
+    <div class="hero-content">
+        <span class="hero-badge">📝 Blog personal</span>
+        <h1 class="hero-title">Bienvenido a Mi Blog</h1>
+        <p class="hero-subtitle">
+            Artículos sobre desarrollo web, Python, Django y tecnología.
+            Explorá ideas, tutoriales y reflexiones.
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{% url 'posts:lista_posts' %}" class="btn btn-blog-primary btn-lg">
+                <i class="bi bi-grid me-2"></i>Ver todos los posts
+            </a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'registro' %}" class="btn btn-blog-outline btn-lg">
+                Crear cuenta
+            </a>
+            {% else %}
+            <a href="{% url 'posts:crear_post' %}" class="btn btn-blog-outline btn-lg">
+                <i class="bi bi-plus me-2"></i>Escribir post
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-<nav>
-    <a href="{% url 'posts:lista_posts' %}">Inicio</a>
-    {% if user.is_authenticated %}
-    <span>Hola, {{ user.username }}</span>
-    <a href="{% url 'posts:crear_post' %}">Crear post</a>
-    <form action="{% url 'logout' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit">Cerrar sesión</button>
-    </form>
-    {% else %}
-    <a href="{% url 'login' %}">Iniciar sesión</a>
-    <a href="{% url 'registro' %}">Crear cuenta</a>
-    {% endif %}
-</nav>
-
-<section>
-    <p>
-        ¡Te damos la bienvenida a este espacio digital! Aquí encontrarás artículos, tutoriales y reflexiones sobre
-        desarrollo web, programación en Python y Django, y tecnología en general. Te invitamos a explorar nuestras
-        secciones y disfrutar del contenido.
-    </p>
+<!-- Posts recientes -->
+{% if posts_recientes %}
+<section class="mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Publicaciones recientes</h2>
+        <a href="{% url 'posts:lista_posts' %}" class="btn btn-outline-secondary btn-sm">Ver todos</a>
+    </div>
+    <div class="row g-4">
+        {% for post in posts_recientes %}
+        <div class="col-md-4">
+            <div class="post-card h-100">
+                {% if post.imagen %}
+                <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" class="post-card-img">
+                {% else %}
+                <div class="post-card-img-placeholder">
+                    <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                </div>
+                {% endif %}
+                <div class="post-card-body">
+                    <h3 class="post-card-title">
+                        <a href="{% url 'posts:detalle_post' post.slug %}">{{ post.titulo }}</a>
+                    </h3>
+                    <p class="post-card-excerpt">{{ post.get_resumen }}</p>
+                    <div class="post-meta">
+                        <span><i class="bi bi-person me-1"></i>{{ post.autor.username }}</span>
+                        <span><i class="bi bi-calendar me-1"></i>{{ post.fecha_creacion|date:"d M Y" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </section>
+{% endif %}
 {% endblock %}

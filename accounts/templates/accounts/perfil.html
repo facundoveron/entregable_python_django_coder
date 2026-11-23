@@ -1,26 +1,63 @@
 {% extends "posts/base.html" %}
 {% load static %}
 
+{% block title %}Mi Perfil | Mi Blog{% endblock %}
+
 {% block content %}
-<h1>Mi perfil</h1>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center p-4">
+            {% if perfil.avatar %}
+            <img src="{{ perfil.avatar.url }}" alt="{{ user.username }}" class="avatar-perfil mx-auto mb-3">
+            {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Avatar por defecto" class="avatar-perfil mx-auto mb-3">
+            {% endif %}
+            <h2 class="h4 mb-1">{{ user.username }}</h2>
+            <p class="text-muted small mb-3">{{ user.email }}</p>
+            <div class="d-flex flex-column gap-2">
+                <a href="{% url 'editar_perfil' %}" class="btn btn-blog-secondary btn-sm">
+                    <i class="bi bi-pencil me-2"></i>Editar perfil
+                </a>
+                <a href="{% url 'password_change' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-lock me-2"></i>Cambiar contraseña
+                </a>
+            </div>
+        </div>
+    </div>
 
-{% if perfil.avatar %}
-<img src="{{ perfil.avatar.url }}" alt="Avatar" class="avatar-post" />
-{% else %}
-<img src="{% static 'images/default-user.png' %}" alt="Avatar por defecto" class="avatar-post" />
-{% endif %}
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h3 class="card-title h5 mb-3">Sobre mí</h3>
+                {% if perfil.biografia %}
+                <p>{{ perfil.biografia }}</p>
+                {% else %}
+                <p class="text-muted fst-italic">Sin biografía aún.</p>
+                {% endif %}
+                {% if perfil.link_web %}
+                <p><i class="bi bi-link-45deg me-1"></i><a href="{{ perfil.link_web }}" target="_blank">{{ perfil.link_web }}</a></p>
+                {% endif %}
+            </div>
+        </div>
 
-<p><strong>Usuario:</strong> {{ user.username }}</p>
-<p><strong>Email:</strong> {{ user.email }}</p>
-<p><strong>Biografía:</strong> {{ perfil.biografia }}</p>
-
-{% if perfil.link_web %}
-<p>
-    <strong>Web:</strong>
-    <a href="{{ perfil.link_web }}">{{ perfil.link_web }}</a>
-</p>
-{% endif %}
-
-<a href="{% url 'editar_perfil' %}">Editar perfil</a>
-<a href="{% url 'password_change' %}">Cambiar contraseña</a>
+        {% if posts_recientes %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="card-title h5 mb-0">Mis últimos posts</h3>
+                    <a href="{% url 'posts:mis_posts' %}" class="btn btn-sm btn-outline-secondary">Ver todos</a>
+                </div>
+                <ul class="list-unstyled">
+                    {% for post in posts_recientes %}
+                    <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <a href="{% url 'posts:detalle_post' post.slug %}" class="text-decoration-none">{{ post.titulo }}</a>
+                        <span class="badge-estado badge-estado--{{ post.estado }} ms-2">{{ post.get_estado_display }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

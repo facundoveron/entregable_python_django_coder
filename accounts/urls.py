@@ -12,16 +12,15 @@ urlpatterns = [
         "password/cambiar/",
         auth_views.PasswordChangeView.as_view(
             template_name="accounts/password_change.html",
-            success_url="/accounts/password/cambiada/"
+            success_url="/accounts/password/cambiada/",
         ),
         name="password_change",
     ),
     path(
         "password/cambiada/",
         auth_views.PasswordChangeDoneView.as_view(
-            template_name="accounts/password_change_done.html"
+            template_name="accounts/password_change_done.html",
         ),
         name="password_change_done",
     ),
-
 ]

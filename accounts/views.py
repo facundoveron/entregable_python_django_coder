@@ -1,43 +1,45 @@
 from django.shortcuts import render, redirect
-from .forms import RegistroUsuarioForm
-from .models import Perfil
 from django.contrib.auth.decorators import login_required
-from .forms import PerfilForm
+from django.contrib import messages
+from .forms import RegistroUsuarioForm, PerfilForm
+from .models import Perfil
 
 
 @login_required
-def pefil(request):
-    perfil, creado = Perfil.objects.get_or_create(user=request.user)
-    return render(request, "accounts/perfil.html", {"perfil": perfil})
+def perfil(request):
+    perfil_obj, _ = Perfil.objects.get_or_create(user=request.user)
+    posts = request.user.posts.order_by("-fecha_creacion")[:5]
+    return render(request, "accounts/perfil.html", {
+        "perfil": perfil_obj,
+        "posts_recientes": posts,
+    })
 
 
 @login_required
 def editar_perfil(request):
-    perfil, creado = Perfil.objects.get_or_create(user=request.user)
+    perfil_obj, _ = Perfil.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = PerfilForm(request.POST, request.FILES, instance=perfil)
-
+        form = PerfilForm(request.POST, request.FILES, instance=perfil_obj)
         if form.is_valid():
             form.save()
-            return redirect("lista_posts")
+            messages.success(request, "Perfil actualizado correctamente.")
+            return redirect("perfil")
     else:
-        form = PerfilForm(instance=perfil)
+        form = PerfilForm(instance=perfil_obj)
 
     return render(request, "accounts/editar_perfil.html", {"form": form})
+
 
 def registro(request):
     if request.method == "POST":
         form = RegistroUsuarioForm(request.POST)
-
         if form.is_valid():
             user = form.save()
-            Perfil.objects.create(user=user)
+            Perfil.objects.get_or_create(user=user)
+            messages.success(request, "¡Cuenta creada exitosamente! Ya podés iniciar sesión.")
             return redirect("login")
-        else:
-            print(f"Formulario invalido {form.errors}")
     else:
         form = RegistroUsuarioForm()
-
 
     return render(request, "accounts/registro.html", {"form": form})

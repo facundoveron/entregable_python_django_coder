@@ -20,16 +20,6 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@x$$x^-(5ais#ib%5b!&%l6m%$s(f#d*cy49z^$e0e(2k)se2v'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -138,12 +128,15 @@ MAILERS = {
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'posts:lista_posts'

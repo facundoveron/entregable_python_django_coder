@@ -1,43 +1,58 @@
-{% extends 'posts/base.html' %}
+{% extends "posts/base.html" %}
+
+{% block title %}{{ titulo_pagina }} | Mi Blog{% endblock %}
 
 {% block content %}
+<div class="form-blog-container">
+    <div class="form-blog-card">
+        <div class="form-blog-header">
+            <h1>{{ titulo_pagina }}</h1>
+            {% if post %}
+            <p class="text-muted">Editando: <strong>{{ post.titulo }}</strong></p>
+            {% else %}
+            <p class="text-muted">Completá el formulario para publicar tu artículo.</p>
+            {% endif %}
+        </div>
 
-{% if post and post.imagen %}
-<p>Imagen actual:</p>
-<img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" width="300" />
-{% endif %}
+        {% if post and post.imagen %}
+        <div class="mb-4">
+            <label class="form-label text-muted">Imagen actual:</label>
+            <div>
+                <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" class="img-thumbnail" style="max-height: 200px;">
+            </div>
+        </div>
+        {% endif %}
 
-<h1>{{ titulo_pagina }}</h1>
+        <form method="post" enctype="multipart/form-data" class="form-blog">
+            {% csrf_token %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-        {{ form.titulo.label_tag }}
-        {{ form.titulo }}
-        {{ form.titulo.errors }}
+            {% for field in form %}
+            <div class="mb-4">
+                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="text-danger ms-1">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-blog-primary btn-lg">
+                    <i class="bi bi-check-circle me-2"></i>{{ texto_boton }}
+                </button>
+                {% if post %}
+                <a href="{% url 'posts:detalle_post' post.slug %}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+                {% else %}
+                <a href="{% url 'posts:lista_posts' %}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+                {% endif %}
+            </div>
+        </form>
     </div>
-    <div>
-        {{ form.contenido.label_tag }}
-        {{ form.contenido }}
-        {{ form.contenido.errors }}
-    </div>
-    <div>
-        {{ form.estado.label_tag }}
-        {{ form.estado }}
-        {{ form.estado.errors }}
-    </div>
-    <div>
-        {{ form.autor.label_tag }}
-        {{ form.autor }}
-        {{ form.autor.errors }}
-    </div>
-    <button type="submit">{{ texto_boton }}</button>
-</form>
-
-{% if post %}
-<a href="{% url 'posts:detalle_post' post.slug %}">Cancelar edición</a>
-{% else %}
-<a href="{% url 'posts:lista_posts' %}">Cancelar creación</a>
-{% endif %}
-
+</div>
 {% endblock %}

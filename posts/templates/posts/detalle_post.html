@@ -1,26 +1,61 @@
-{% extends 'posts/base.html' %}
+{% extends "posts/base.html" %}
+{% load static %}
+
+{% block title %}{{ post.titulo }} | Mi Blog{% endblock %}
 
 {% block content %}
+<article class="post-detail-container">
+    <!-- Encabezado -->
+    <header class="post-detail-header">
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="badge-estado badge-estado--{{ post.estado }}">{{ post.get_estado_display }}</span>
+        </div>
+        <h1 class="post-detail-title">{{ post.titulo }}</h1>
+        {% if post.resumen %}
+        <p class="post-detail-subtitle">{{ post.resumen }}</p>
+        {% endif %}
+        <div class="post-meta mt-3">
+            <span>
+                {% if post.autor.perfil.avatar %}
+                <img src="{{ post.autor.perfil.avatar.url }}" class="avatar-mini me-1">
+                {% endif %}
+                <i class="bi bi-person me-1"></i>{{ post.autor.username }}
+            </span>
+            <span><i class="bi bi-calendar me-1"></i>{{ post.fecha_creacion|date:"d \d\e F \d\e Y" }}</span>
+            {% if post.fecha_actualizacion != post.fecha_creacion %}
+            <span class="text-muted"><i class="bi bi-pencil-square me-1"></i>Editado {{ post.fecha_actualizacion|date:"d M Y" }}</span>
+            {% endif %}
+        </div>
+    </header>
 
-<h1>{{ post.titulo }}</h1>
+    <!-- Imagen de portada -->
+    {% if post.imagen %}
+    <div class="post-detail-cover">
+        <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" class="img-fluid rounded-3">
+    </div>
+    {% endif %}
 
-<p>Autor: {{ post.autor.username }}</p>
-<p>Estado: {{ post.estado }}</p>
-<p>Fecha: {{ post.fecha_creacion }}</p>
+    <!-- Contenido -->
+    <div class="post-content">
+        {{ post.contenido|linebreaks }}
+    </div>
 
-{% if post.imagen %}
-<img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" width="600">
-{% endif %}
+    <!-- Acciones del autor -->
+    {% if user == post.autor %}
+    <div class="post-actions-bar">
+        <a href="{% url 'posts:editar_post' post.slug %}" class="btn btn-blog-secondary">
+            <i class="bi bi-pencil me-2"></i>Editar post
+        </a>
+        <a href="{% url 'posts:post_confirm_delete' post.slug %}" class="btn btn-blog-danger">
+            <i class="bi bi-trash me-2"></i>Eliminar post
+        </a>
+    </div>
+    {% endif %}
 
-<hr>
-
-<p>{{ post.contenido }}</p>
-
-{% if user == post.autor %}
-<a href="{% url 'posts:editar_post' post.slug %}">Editar post</a>
-<a href="{% url 'posts:post_confirm_delete' post.slug %}">Eliminar post</a>
-{% endif %}
-
-<a href="{% url 'posts:lista_posts' %}">Volver al listado</a>
-
+    <div class="mt-4">
+        <a href="{% url 'posts:lista_posts' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al listado
+        </a>
+    </div>
+</article>
 {% endblock %}

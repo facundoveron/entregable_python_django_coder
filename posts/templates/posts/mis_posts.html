@@ -1,0 +1,62 @@
+{% extends "posts/base.html" %}
+
+{% block title %}Mis Posts | Mi Blog{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-header-title">Mis publicaciones</h1>
+            <p class="text-muted">Todos tus posts, incluidos borradores.</p>
+        </div>
+        <a href="{% url 'posts:crear_post' %}" class="btn btn-blog-primary">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo post
+        </a>
+    </div>
+</div>
+
+{% if posts %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Título</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>
+                    <a href="{% url 'posts:detalle_post' post.slug %}" class="fw-semibold text-decoration-none">
+                        {{ post.titulo }}
+                    </a>
+                </td>
+                <td>
+                    <span class="badge-estado badge-estado--{{ post.estado }}">{{ post.get_estado_display }}</span>
+                </td>
+                <td class="text-muted small">{{ post.fecha_creacion|date:"d M Y" }}</td>
+                <td class="text-end">
+                    <a href="{% url 'posts:editar_post' post.slug %}" class="btn btn-sm btn-outline-secondary me-1">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'posts:post_confirm_delete' post.slug %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="bi bi-journal-plus empty-state-icon"></i>
+    <h3>Todavía no escribiste nada</h3>
+    <p>¡Creá tu primer post!</p>
+    <a href="{% url 'posts:crear_post' %}" class="btn btn-blog-primary">Crear primer post</a>
+</div>
+{% endif %}
+{% endblock %}
